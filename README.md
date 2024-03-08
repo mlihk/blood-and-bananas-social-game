@@ -67,7 +67,7 @@ What should the player do?
   Equally, a player may choose to observe the actions of other players when
   their tasks are satisfied to their liking.
   
-  How does TaskManager?Does cs script manage tasks?
+  How does TaskManager?Does CS script manage tasks?
     The task manager script handles the storage of tasks and their addition or
     removal to each player’s objective window. For each update, the script
     will check if each task needs to be updated by getting its needs update
@@ -77,7 +77,7 @@ What should the player do?
     Each task is an instance of the Task class, storing the taskName, for the infected,
     and a goal integer value. As well as this, it stores a needs update boolean -
     initialised as true - and a progress integer - initialised at 0.
-    
+      
     Each Interact() method that progresses a task does so by going through the
     list of tasks, finding the one with the taskName that matches their target, and
     calls the task’s IterateProgress() method, iterating progress by 1 and setting
