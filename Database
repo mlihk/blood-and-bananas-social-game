@@ -1,0 +1,240 @@
+//Work from week 7/8/9
+using System;
+using System.Data.SqlClient;
+
+class dataStoring
+{
+    static void Main(String[] args)
+    {
+        string connectionString = "Data Source=xx;Initial Catalog=myDataBase; User Id=admin;Password=admin";
+        boolean nextStep = false;
+        while (nextStep = false)
+        {
+        playerID = randomIDGem()
+
+        Console.Write("Enter email address: ");
+        string email = Console.ReadLine();
+
+        Console.Write("Enter password: ");
+        string userPassword = Console.ReadLine();
+
+        if (checkEmailDupe(email) = true and checkIDDupe(playerID) = true)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+        {
+            connection.Open();
+
+            string sql= "INSERT INTO players (playerID, email, password, wins) VALUES (@playerID, @email, @userPassword, 0)";
+            using (SqlCommand command = new Sqlcommand(sql, connection))
+            {
+                command.Parameters.AddWithValue("@playerID", playerID);
+                command.Parameters.AddWithValue("@email", email);
+                command.Parameters.AddWithValue("@password", password);
+                command.ExecuteNonQuery();
+
+            }
+        }
+            Console.WriteLine("Player account created!");
+            Console.WriteLine("Your unique player ID is", playerID);
+            Console.ReadKey();
+            nextStep = true;
+        }
+        }
+
+    
+    static int randomIDGem()
+        Random random = new Random();
+        int playerID = random.Next(1,10000));
+
+        return playerID;
+
+    static bool checkEmailDupe(String email, string connectionString)
+        using (SqlConnection connection = new SqlConnection(connectionString))
+        {
+            connection.Open();
+
+            string sql= "SELECT COUNT(*) FROM players WHERE email = @email";
+
+            using (SqlCommand command = new Sqlcommand(sql, connection))
+            {
+                command.Parameters.AddWithValue("@email", email);
+
+                int count = (int)command.ExecuteScalar();
+
+                if (count > 0)
+                {
+                    Console.WriteLine("This email address has already been registered!");
+                    Console.ReadKey();
+                    return false;
+                }
+                else
+                {
+                    Console.ReadKey();
+                    return true;
+                }
+            }
+        }
+    static bool checkIDDupe(int playerID, string connectionString)
+        using (SqlConnection connection = new SqlConnection(connectionString))
+        {
+            connection.Open();
+
+            string sql= "SELECT COUNT(*) FROM players WHERE playerID = @playerID";
+
+            using (SqlCommand command = new Sqlcommand(sql, connection))
+            {
+                command.Parameters.AddWithValue("@playerID", playerID);
+
+                int count = (int)command.ExecuteScalar();
+
+                if (count > 0)
+                {
+                    Console.WriteLine("This playerID has already been registered!");
+                    Console.ReadKey();
+                    return false;
+                }
+                else
+                {
+                    Console.ReadKey();
+                    return true;
+                }
+            }
+        }
+    static (int, int) playerlogin(string[] args, string connectionString)
+
+        while (true)
+        {
+            Console.Write("enter your login email: ");
+            string email = Console.ReadLine();
+            Console.Write("enter your login password: ");
+            string password = Console.ReadLine();
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string sql= "SELECT COUNT(*) FROM players WHERE email = @email AND password = @password";
+
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue("@email", email);
+                    command.Parameters.AddWithValue("@password", password);
+
+                    int count = (int)command.ExecuteScalar();
+
+                    if (count > 0)
+                    {
+                        Console.WriteLine("Login successful!");
+                        string sql = "Select playerID, wins FROM players WHERE email=@email";
+                        using (Sqlcommand command = new Sqlcommand(sql, connection))
+                        {
+                            command.Parameters.AddWithValue("@email", email);
+                            
+                            using (SqlDataReader reader = command.ExecuteReader())
+                            {
+                                if (reader.HasRows && reader.Read())
+                                {
+                                    int returnPlayerID = reader.GetInt32(0); //use to return player id for display?
+                                    int wins = reader.GetInt32(1); // use to return wins, if you need to store any additional information lmk!
+                                }
+                            }
+                        }
+                        return (returnPlayerID, wins);
+                        break;                        
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid login credentials! Please Try again!")
+                    }
+                }
+
+            }
+        }
+        Console.ReadKey();
+
+    static void winValueChange(int[] args) //simmply add 1 to the win in database for that user
+        int returnPlayerID = int[0]
+        {
+        string connectionString = "Data Source=serverAddress; Initial Catalog=myDataBase;User Id=admin;Password=admin"
+        
+        Using (SqlConnection connection = new SqlConnection(connectionString))
+        {
+            connection.Open();
+
+            string sql = "UPDATE players SET wins = wins + 1 WHERE playerID = @returnPlayerID";
+            using (Sqlcommand command = new Sqlcommand(sql, connection))
+            {
+                command.Parameters.AddwithValue("@returnPlayerID", playerID);
+                Console.writeLine("Wins has been recorded to the player!")
+            }
+        }
+        }
+
+    static void deleteAccount(int playerID, int connectionString) // to use this function simply use Player player = new Player(); player.deleteAccount(xxxx, connectionString)
+        {
+            using(SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string sql = "DELETE FROM players WHERE playerID = @playerID";
+                using (Sqlcommand command= new Sqlcommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue("@playerID", playerID);
+
+                    Console.writeLine("Account successfully deleted for ID {0}", playerID);
+                }
+            }
+        }
+    
+    static void overrideWins(int playerID, int wins, int connectionString)
+        {
+            using(SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string sql = "UPDATE players SET wins = @wins WHERE playerID = @playerID";
+                using (Sqlcommand command = new Sqlcommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue("@playerID", playerID);
+                    command.Parameters.AddWithValue("@wins", wins);
+
+                    Console.writeLine("Manually Overrided win value for player {0}", playerID);
+                }
+            }
+
+        }
+    
+    public void emailChange(int playerID, string newEmail, int connectionString) //BECAREFUL ONLY CALL THIS AFTER LOGIN! call by player.emailChange(xxxx, newemailaddress, connectionstring)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString)
+            {
+                connection.Open();
+
+                string sql = "UPDATE players SET email = @newEmail WHERE playerID = @playerID";
+                using (Sqlcommand command = new Sqlcommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue("@playerID", playerID);
+                    command.Parameters.AddWithvalue("@newEmail", newEmail);
+                    Console.WriteLine("Email address has been updated for player {0}", playerID);
+
+                }
+            }
+        }
+    public void passwordChange(int playerID, string newPassword, int connectionString) //BECAREFUL ONLY CALL THIS AFTER LOGIN! call this by player.passwordChange(xxxx, newpassword, connetionstring)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString)
+            {
+                connection.Open();
+
+                string sql = "UPDATE players SET password = @newPassword WHERE playerID = @playerID";
+                using (Sqlcommand command = new Sqlcommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue("@playerID", playerID);
+                    command.Parameters.AddWithvalue("@newPassword", newPassword);
+                    Console.WriteLine("Password has been updated for player {0}", playerID);
+
+                }
+            }
+        }
+
+    }
+}
